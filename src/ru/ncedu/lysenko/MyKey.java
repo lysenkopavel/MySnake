@@ -32,17 +32,17 @@ public class MyKey extends KeyAdapter {
                 newDirectionX = 0;
                 newDirectionY = 1;
             }
-            if (e.getKeyCode() == VK_UP) {
+            else if (e.getKeyCode() == VK_UP) {
                 newDirectionX = 0;
                 newDirectionY = -1;
             }
-        }
-        if (snakeGame.getDirectionY() != 0) {
+        } else {
+//        if (snakeGame.getDirectionY() != 0) {
             if (e.getKeyCode() == VK_LEFT) {
                 newDirectionX = -1;
                 newDirectionY = 0;
             }
-            if (e.getKeyCode() == VK_RIGHT) {
+            else if (e.getKeyCode() == VK_RIGHT) {
                 newDirectionX = 1;
                 newDirectionY = 0;
             }

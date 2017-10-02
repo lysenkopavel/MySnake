@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
 import static java.lang.Math.floor;
 import static ru.ncedu.lysenko.MyFrame.*;
@@ -19,13 +20,25 @@ public class MyPanel extends JPanel {
     private Image gameOver = null;
 
     private JButton buttonExit = new JButton("Exit");
-    JButton buttonNewGame = new JButton("New game");
-    JLabel textScore = new JLabel("Score: 0");
+    private JButton buttonNewGame = new JButton("New game");
+    private JLabel textScore = new JLabel("Score: 0");
 
     boolean drawGameOver = false;
     boolean drawTwoDimAr = false;
-    int drawScore = 0;
-    int[][] snake = new int[FHIGHT][FWIDTH];
+
+    private Game gameS;
+
+    void setGameS(Game gameS) {
+        this.gameS = gameS;
+    }
+
+    JLabel getTextScore() {
+        return textScore;
+    }
+
+    JButton getButtonNewGame() {
+        return buttonNewGame;
+    }
 
     MyPanel() {
 
@@ -80,19 +93,12 @@ public class MyPanel extends JPanel {
     }
 
     private void paintTwoDemArray(Graphics g) {
-        for (int yy = 0; yy < FHIGHT; yy++) {
-            for (int xx = 0; xx < FWIDTH; xx++) {
-                if (snake[yy][xx] == ISBODY) {
-                    g.drawImage(bodyImage, INDENT + 1 + xx * FSCALE, INDENT + 1 + yy * FSCALE, null);
-                }
-                if (snake[yy][xx] == ISHEAD) {
-                    g.drawImage(headImage, INDENT + xx * FSCALE, INDENT + yy * FSCALE, null);
-                }
-                if (snake[yy][xx] == ISAPPLE) {
-                    g.drawImage(appleImage, INDENT + 1 + xx * FSCALE, INDENT + 1 + yy * FSCALE, null);
-                }
-            }
+        for (Iterator<int[]> i = gameS.snakeListDe.iterator(); i.hasNext(); ) {
+            int[] a = i.next();
+            g.drawImage(bodyImage, INDENT + 1 + a[0] * FSCALE, INDENT + 1 + a[1] * FSCALE, null);
         }
+        g.drawImage(headImage, INDENT + gameS.getHeadX() * FSCALE, INDENT + gameS.getHeadY() * FSCALE, null);
+        g.drawImage(appleImage, INDENT + 1 + gameS.getAppleX() * FSCALE, INDENT + 1 + gameS.getAppleY() * FSCALE, null);
     }
 
     private void readImage() {

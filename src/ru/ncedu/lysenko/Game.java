@@ -6,13 +6,37 @@ import static ru.ncedu.lysenko.MyFrame.*;
 
 class Game {
 
-    MyPanel mp;
-    boolean endGame = false;
-    int score = 0;
-
+    private int score = 0;
+    private boolean endGame = false;
     private int directionX, directionY;
-    private List<int[]> snakeList = new ArrayList<>();
-    private int gX, gY;
+    private int[] headCoord = new int[2];
+    private int[] appleCoord = new int[2];
+
+    Deque<int[]> snakeListDe = new ArrayDeque<>();
+
+    boolean isEndGame(){
+        return  endGame;
+    }
+
+    int getScore(){
+        return score;
+    }
+
+    int getAppleX() {
+        return appleCoord[0];
+    }
+
+    int getAppleY() {
+        return appleCoord[1];
+    }
+
+    int getHeadX() {
+        return headCoord[0];
+    }
+
+    int getHeadY() {
+        return headCoord[1];
+    }
 
     int getDirectionX() {
         return directionX;
@@ -30,76 +54,64 @@ class Game {
         this.directionY = dY;
     }
 
-    Game(MyPanel myPanel) {
-
-        this.mp = myPanel;
-
-        for (int yy = 0; yy < FHIGHT; yy++) {
-            for (int xx = 0; xx < FWIDTH; xx++) {
-                mp.snake[yy][xx] = 0;
-            }
-        }
+    Game() {
         directionX = -1;
         directionY = 0;
-        gX = FWIDTH / 2;
-        gY = FHIGHT / 2;
-        mp.snake[gY][gX] = ISHEAD;
-        snakeList.add(new int[]{gX, gY});
 
-        int appleCoord[] = this.appleNew();
-        mp.snake[appleCoord[1]][appleCoord[0]] = ISAPPLE;
+        headCoord[0] = FWIDTH / 2;
+        headCoord[1] = FHIGHT / 2;
 
+        snakeListDe.addFirst(headCoord);
+        appleCoord[0] = 10;
+        appleCoord[1] = 20;
     }
 
     void move() {
-        boolean eatApple = false;
 
-        gX = this.step(gX + directionX, FWIDTH);
-        gY = this.step(gY + directionY, FHIGHT);
+        int[] newHead = new int[2];
+        newHead[0] = this.step(headCoord[0] + directionX, FWIDTH);
+        newHead[1] = this.step(headCoord[1] + directionY, FHIGHT);
 
-        if (mp.snake[gY][gX] == ISBODY) {
+        if (this.containsElement(newHead, snakeListDe)) {
             endGame = true;
         } else {
-            mp.snake[snakeList.get(0)[1]][snakeList.get(0)[0]] = 0;
-            snakeList.remove(0);
-            snakeList.add(new int[]{gX, gY});
+            snakeListDe.removeLast();
+            snakeListDe.addFirst(newHead);
 
-            if (mp.snake[gY][gX] == ISAPPLE) {
+            if ((appleCoord[0] == newHead[0]) && (appleCoord[1] == newHead[1])) {
                 score = score + ADD_SCORE;
-                snakeList.add(new int[]{gX, gY});
-                eatApple = true;
+                this.appleNew();
+                snakeListDe.addFirst(newHead);
             }
-
-            for (Iterator<int[]> i = snakeList.iterator(); i.hasNext(); ) {
-                int[] a = i.next();
-                mp.snake[a[1]][a[0]] = ISBODY;
-            }
-            mp.snake[gY][gX] = ISHEAD;
-
-            if (eatApple) mp.snake[this.appleNew()[1]][this.appleNew()[0]] = ISAPPLE;
-
+            headCoord = newHead;
         }
     }
 
-    private int[] appleNew() {
+    private void appleNew() {
         int aX, aY;
         Random rand = new Random();
         do {
             aX = rand.nextInt(FWIDTH);
             aY = rand.nextInt(FHIGHT);
-        } while (mp.snake[aY][aX] != 0);
-        int appleCoord[] = new int[2];
-
+        } while (this.containsElement(new int[]{aX, aY}, snakeListDe));
         appleCoord[0] = aX;
         appleCoord[1] = aY;
-        return appleCoord;
     }
 
-    private int step(int newCoord, int FULLSIZE){
+    private int step(int newCoord, int FULLSIZE) {
         if (newCoord == FULLSIZE) return 0;
         else if (newCoord == -1) return (FULLSIZE - 1);
         else return newCoord;
     }
 
+    private boolean containsElement(int[] a, Deque<int[]> deque) {
+        for (Iterator<int[]> i = deque.iterator(); i.hasNext(); ) {
+            int[] el = i.next();
+            if ((el[0] == a[0]) && (el[1] == a[1])) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
