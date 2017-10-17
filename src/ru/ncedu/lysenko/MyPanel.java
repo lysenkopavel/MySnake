@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import static java.lang.Math.floor;
 import static ru.ncedu.lysenko.MyFrame.*;
@@ -74,7 +73,7 @@ public class MyPanel extends JPanel {
         buttonExit.setBackground(new Color(227, 55, 62));
 
         textScore.setBounds(650, 200, 100, 30);
-        textScore.setFont(new Font("Serif", Font.PLAIN, 20));
+        textScore.setFont(new Font("Serif", Font.PLAIN, 16));
 
         this.paintGrid(g);
         if (drawTwoDimAr) this.paintTwoDemArray(g);
@@ -93,8 +92,7 @@ public class MyPanel extends JPanel {
     }
 
     private void paintTwoDemArray(Graphics g) {
-        for (Iterator<int[]> i = gameS.snakeListDe.iterator(); i.hasNext(); ) {
-            int[] a = i.next();
+        for (int[] a : gameS.snakeListDe) {
             g.drawImage(bodyImage, INDENT + 1 + a[0] * FSCALE, INDENT + 1 + a[1] * FSCALE, null);
         }
         g.drawImage(headImage, INDENT + gameS.getHeadX() * FSCALE, INDENT + gameS.getHeadY() * FSCALE, null);

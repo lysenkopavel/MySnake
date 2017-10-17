@@ -1,5 +1,6 @@
 package ru.ncedu.lysenko;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static ru.ncedu.lysenko.MyFrame.*;
@@ -12,7 +13,7 @@ class Game {
     private int[] headCoord = new int[2];
     private int[] appleCoord = new int[2];
 
-    Deque<int[]> snakeListDe = new ArrayDeque<>();
+    LinkedList<int[]> snakeListDe = new LinkedList<>();
 
     boolean isEndGame(){
         return  endGame;
@@ -73,6 +74,7 @@ class Game {
         newHead[1] = this.step(headCoord[1] + directionY, FHIGHT);
 
         if (this.containsElement(newHead, snakeListDe)) {
+//        if (snakeListDe.contains(newHead)){
             endGame = true;
         } else {
             snakeListDe.removeLast();
@@ -94,6 +96,7 @@ class Game {
             aX = rand.nextInt(FWIDTH);
             aY = rand.nextInt(FHIGHT);
         } while (this.containsElement(new int[]{aX, aY}, snakeListDe));
+//        } while (snakeListDe.contains(new int[]{aX, aY}));
         appleCoord[0] = aX;
         appleCoord[1] = aY;
     }
@@ -105,11 +108,11 @@ class Game {
     }
 
     private boolean containsElement(int[] a, Deque<int[]> deque) {
-        for (Iterator<int[]> i = deque.iterator(); i.hasNext(); ) {
-            int[] el = i.next();
-            if ((el[0] == a[0]) && (el[1] == a[1])) {
-                return true;
-            }
+        for (int[] el : deque) {
+            if (Arrays.equals(el, a)) return true;
+//            if ((el[0] == a[0]) && (el[1] == a[1])) {
+//                return true;
+//            }
         }
         return false;
     }

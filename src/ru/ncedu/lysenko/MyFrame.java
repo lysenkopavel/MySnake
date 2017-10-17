@@ -6,7 +6,7 @@ class MyFrame extends JFrame{
 
     static final int FRAME_HEIGHT=650, FRAME_WIDTH=800;
     static final int FWIDTH = 30, FHIGHT = 30, FSCALE = 20, INDENT = 10;
-    static final int SPEED = 150;
+    static final int SPEED = 100;
     static final int ADD_SCORE = 10;
 
     MyFrame() {
